@@ -1,0 +1,26 @@
+service: python-service
+
+provider:
+  name: openwhisk
+  runtime: python
+
+functions:
+  currentTime:
+    handler: handler.endpoint
+    events:
+      - http:
+          path: ping
+          method: get
+  bookSearch:
+    handler: book-search/book-search.search
+    events:
+      - http:
+        path: ping
+        method: get
+
+plugins:
+  - serverless-openwhisk
+
+custom:
+  pythonRequirements:
+    dockerizePip: true

@@ -1,0 +1,8 @@
+{
+  "name": "book-tracker-orchestration",
+  "version": "0.1.0",
+  "description": "HTTP API Endpoints based on Openwhisk Python Actions/Handlers",
+  "dependencies": {
+    "serverless-openwhisk": ">=0.13.0"
+  }
+}
