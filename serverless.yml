@@ -12,15 +12,14 @@ functions:
           path: ping
           method: get
   bookSearch:
-    handler: book-search/book-search.search
+    handler: book_search.search
     events:
       - http:
         path: ping
         method: get
+    annotations:
+      web-export: true
 
 plugins:
   - serverless-openwhisk
 
-custom:
-  pythonRequirements:
-    dockerizePip: true
