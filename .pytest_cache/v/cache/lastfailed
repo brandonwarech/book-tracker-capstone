@@ -1,0 +1,4 @@
+{
+  "book_search_test.py::test_book_search_author": true,
+  "book_search_test.py::test_book_search_title": true
+}

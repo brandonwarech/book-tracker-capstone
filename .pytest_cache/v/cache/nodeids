@@ -1,0 +1,6 @@
+[
+  "book_search_test.py::test_book_search_isbn",
+  "book_search_test.py::test_book_search_author",
+  "book_search_test.py::test_book_search_no_params",
+  "book_search_test.py::test_book_search_title"
+]
