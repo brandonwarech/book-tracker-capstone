@@ -1,4 +1,5 @@
 {
+  "book_list_test.py::test_get_booklist_by_booklistid": true,
   "book_search_test.py::test_book_search_author": true,
   "book_search_test.py::test_book_search_title": true
 }
