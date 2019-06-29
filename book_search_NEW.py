@@ -91,9 +91,20 @@ def search_by_isbn(isbn):
 def open_query_to_summary(query):
     summary = []
     search_url_final = search_url + "q=" + query
-    r = requests.get(search_url_final, headers)
-    data = r.json()
-    results = data["docs"]
+    try:
+        r = requests.get(search_url_final, headers)
+        data = r.json()
+        results = data["docs"]
+    except requests.exceptions.HTTPError as errh:
+        logging.error("Http Error:" + str(errh))
+    except requests.exceptions.ConnectionError as errc:
+        logging.error("Error Connecting:" + errc)
+    except requests.exceptions.Timeout as errt:
+        logging.error("Timeout Error:"+ errt)
+    except requests.exceptions.RequestException as err:
+        logging.error("OOps: Something Else" + err)
+
+        
     for r in results:
         if 'title_suggest' in r and 'isbn' in r and 'author_name' in r and 'publish_year' in r and 'publisher' in r: 
             title = r['title_suggest']
