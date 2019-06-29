@@ -29,41 +29,9 @@ def search(params):
         logging.debug(output)
         return output
 
-    elif "author" in params:
-        author = params["author"]
-        author_isbn = author_query_to_isbn_array(author)
-        for i in author_isbn:
-            data = search_by_isbn(i)
-            logging.debug('Data37 Debug: ' + str(data))
-            if transform_books_to_output_format(data) != None:
-                logging.debug('Appending transform_books_to_output_format(data)' + str(transform_books_to_output_format(data)))
-                final_books_array.append(transform_books_to_output_format(data))
-            else:
-                logging.warning('passing as no data was found') 
-                pass
-        logging.debug("Final Books Array 1 " + str(final_books_array))
-        output= {
-            "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": {"books": final_books_array} }
-        logging.debug('Returning')
-        logging.debug(output)
-        return output
-
-    elif "title" in params:
-        title = params["title"]
-        title_isbn = title_query_to_isbn_array(title)
-        for i in title_isbn:
-            data = search_by_isbn(i)
-            final_books_array.append(transform_books_to_output_format(data))
-        logging.debug("Final Books Array 2 " + str(final_books_array))
-        output = {
-            "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
-            "body": {"books": final_books_array} }
-        logging.debug("Returning")
-        logging.debug(output)
-        return output
+    elif "query" in params:
+        query = params["query"]
+        open_query_to_summary(query)
 
     else:
         logging.error("Required Parameters not supplied.")
@@ -120,42 +88,38 @@ def search_by_isbn(isbn):
         logging.error("OOps: Something Else" + err)
 
 
-def open_query_to_isbn_array(query):
+def open_query_to_summary(query):
+    summary = []
     search_url_final = search_url + "q=" + query
     r = requests.get(search_url_final, headers)
     data = r.json()
-    logging.debug(data)
+    results = data["docs"]
+    for r in results:
+        if 'title_suggest' in r and 'isbn' in r and 'author_name' in r and 'publish_year' in r and 'publisher' in r: 
+            title = r['title_suggest']
+            isbn = r['isbn']
+            author = r['author_name']
+            publication_date = r['publish_year']
+            publisher = r['publisher']
 
-
-def author_query_to_isbn_array(author):
-    search_url_final = search_url + "author=" + author
-    logging.info(search_url_final)
-    r = requests.get(search_url_final, headers)
-    data = r.json()
-    for d in data["docs"]:
-        try:
-            isbn_array.append(d["isbn"][0])
-        except KeyError:
+            book_object = {
+                "title": title,
+                "isbn": isbn,
+                "author": author,
+                "publisher": publisher,
+                "publication_date": publication_date
+            }
+            summary.append(book_object)
+            logging.debug('Appending book object: ' + str(book_object))
+        
+        else:
+            logging.warning("Skipping an entry as no ISBN present in object")
             pass
-    logging.debug(isbn_array)
-    return isbn_array
+    
+    logging.debug(summary)
+    return summary
 
-
-def title_query_to_isbn_array(title):
-    search_url_final = search_url + "title=" + title
-    logging.debug(search_url_final)
-    r = requests.get(search_url_final, headers)
-    data = r.json()
-    for d in data["docs"]:
-        try:
-            isbn_array.append(d["isbn"][0])
-        except KeyError:
-            pass
-    logging.debug(isbn_array)
-    return isbn_array
-
-
-search({'author':'Rusty Williams'})
+search({'query':'a child called it'})
 # search({"isbn": "9780980200447"})
 # search({"title": "a child called it"})
 # seax`rch({'test':'test'})
