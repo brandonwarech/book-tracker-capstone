@@ -1,7 +1,0 @@
-[
-  "test/book_list_test.py::test_get_booklist_by_booklistid",
-  "test/book_search_test.py::test_book_search_isbn",
-  "test/book_search_test.py::test_book_search_author",
-  "test/book_search_test.py::test_book_search_no_params",
-  "test/book_search_test.py::test_book_search_title"
-]

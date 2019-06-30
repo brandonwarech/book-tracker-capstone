@@ -1,5 +1,0 @@
-{
-  "api/book_list_test.py::test_get_booklist_by_booklistid": true,
-  "api/test/book_list_test.py::test_get_booklist_by_booklistid": true,
-  "test/book_list_test.py::test_get_booklist_by_booklistid": true
-}
