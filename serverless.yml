@@ -5,22 +5,16 @@ provider:
   runtime: python
 
 functions:
-  currentTime:
-    handler: handler.endpoint
-    events:
-      - http:
-          path: ping
-          method: get
-  bookSearch:
-    handler: book_search.search
+  bookSearch-2:
+    handler: api/booksearch.main
     events:
       - http:
           path: ping
           method: get
     annotations:
       web-export: true
-  getBookList:
-    handler: book_list.getBookList
+  getBookList-2:
+    handler: api/booklist.main
     events: 
       - http:
           path: ping
