@@ -7,16 +7,14 @@ import parentpackage.classes.favorites as f
 import parentpackage.classes.user as u
 
 
-def test_get_booklist_by_booklistid():
+def test_get_favorites_by_user():
       favoriteObject = f.favorite()
       testUserObject = u.User(12345)
-      assert f.favorite.getFavorites(favoriteObject,testUserObject) == {'body': {'books': [{'author': ['John Miedema'],
-                              'isbn': '1936117363',
-                              'publication_date': 'March 2009',
-                              'publisher': 'Litwin Books',
-                              'title': 'Slow reading',
-                              'url': 'https://openlibrary.org/books/OL22853304M/Slow_reading'}]},
-          'headers': {'Content-Type': 'application/json'},
-          'statusCode': 200}
+      assert f.favorite.getFavorites(favoriteObject,testUserObject) == [{'USER_ID': '12345', 'ISBN': '1234667890'}, {'USER_ID': '12345', 'ISBN': '1244667890'}]
+      # { "favorites": [ { "ISBN": "1234667890", "USER_ID": "12345" }, { "ISBN": "1244667890", "USER_ID": "12345" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
 
-test_get_booklist_by_booklistid()
+
+def test_get_favorites_by_user_api():
+      pass
+
+#test_get_booklist_by_booklistid()

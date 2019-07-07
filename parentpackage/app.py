@@ -26,12 +26,14 @@ isbn_model = api.model('books', {'isbn':fields.Integer('ISBN Number'),'author':f
 @ns_search.route('/<string:query>')
 class iBooks(Resource):
     def get(self, query):
-        results = bs.main({'query': query})
+        query = bs.Search({'query':query})
+        results = bs.Search.searchByQuery(query)
         print(results)
-        return jsonify({'books': results,
+        '''return jsonify({'books': results,
         'headers':{'Content-Type': 'application/json'},
         'statusCode':200
-        })
+        })'''
+        return jsonify(results)
 
 @ns_favorites.route('/<int:user_id>')
 class iFavorites(Resource):
