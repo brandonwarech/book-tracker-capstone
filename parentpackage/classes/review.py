@@ -7,15 +7,19 @@ import jsonify
 import traceback
 import parentpackage.classes.iDb as db
 import parentpackage.classes.user as u
-from abc import ABC,abstractclassmethod,abstractmethod
+import parentpackage.classes.Book as b
+from abc import ABC, abstractclassmethod, abstractmethod
+import traceback
 
 # Set Logging Level
 logging.basicConfig(level=logging.INFO)
 
 # Abstract? class of a saved book (favorite)
-class review:
-    
-    def __init__(self, Book, rating, comment):
+
+
+class Review:
+
+    def __init__(self, user_id, isbn, rating, comment):
 
         # Log the creation of the instance
         logging.debug('Created Favorites Class Instance')
@@ -26,19 +30,22 @@ class review:
 
         self.rating = rating
         self.comment = comment
+        self.user_id = user_id
+        self.isbn = isbn
 
     # Class method to retrieve favorites based on user_id
-    def getReviews(self, isbn):
+    @staticmethod
+    def getReviewsByUser(user_id):
         try:
-            
-            sql = "SELECT * FROM FAVORITES WHERE USER_ID = " + str(user_id)
-            
+            sql = "SELECT * FROM REVIEWS WHERE USER_ID = " + \
+                str(user_id)
+
             # Calls database with constructed SQL from imported db class
-            favs = db.db.callDbFetch(self,sql)
+            reviews = db.dbQuery.callDbFetch(sql)
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
-            logging.info("favorites response: " + str(favs))
+            logging.info("Reviews response: " + str(reviews))
             return favs
 
         except:
@@ -49,17 +56,42 @@ class review:
                 "body": {"error": str(sql) + str(sys.exc_info())}
             }
 
+    @staticmethod
+    def getReviewsByISBN(isbn):
+        try:
+            sql = "SELECT * FROM KXJ28592.REVIEWS WHERE ISBN = " + str(isbn)
+            db_obj = db.dbQuery(sql)
+            reviews = db.dbQuery.callDbFetch(db_obj)
+
+            # Log Results of DB call and return results
+            logging.debug("successful connect to db2")
+            logging.info("SQL: " + str(sql))
+            logging.info("Reviews response: " + str(reviews))
+            return reviews
+
+        except:
+            logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
+            logging.error(traceback.print_exc())
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"error": str(sql) + str(sys.exc_info()) + str(traceback.print_exc()
+)}
+            }
+
+        else:
+            return reviews
+
+
     # Class method which adds book to a user's favorites (also to database)
-    def addToFavorites(self, User, Book):
+    def addReview(self):
 
-        self.isbn = Book.isbn
-        self.user_id = User.user_id
-        
-        sql = "INSERT INTO KXJ28592.FAVORITES (USER_ID,ISBN) VALUES (" + str(
-            self.user_id) + ',' + str(self.isbn) + ');'
+        sql = "INSERT INTO KXJ28592.REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES (" + str(
+            self.user_id) + ',' + str(self.rating) + ',\'' + str(self.comment) + '\',\'' + str(self.isbn) + '\');'
 
-        # The only line of code that really does things (calls out to add favorite to Database) 
-        results =  db.db.callDbInsert(self, sql)
+        # The only line of code that really does things (calls out to add favorite to Database)
+        query_object = db.dbQuery(sql)
+        results = db.dbQuery.callDbInsert(self,query_object)
 
         # Log things about
         logging.debug(sql)
@@ -71,32 +103,28 @@ class review:
         #    "statusCode": 400,
         #    "headers": {"Content-Type": "application/json"},
         #    "body": ''
-        #}
-        
+        # }
+
         # Handle successful response
         if results['statusCode'] == 200:
             logging.debug(results)
             logging.info('Successfully added to Favorites' + str(results))
             return results, 200
-            
+
         # Handle unsuccessful resposes
         elif results['statusCode'] == 400:
-            return results,400
+            return results, 400
 
         else:
             logging.warning('Unexpected Response recieved from DB callout')
             logging.error(results)
-            return results,500
+            return results, 500
 
-
-    def removeFromFavorites(self,params):
+    def removeFromFavorites(self, params):
         return params
-
-
 
 
 '''    def __str__:
         return '{} {}'.format(self.user_id, self.isbn)'''
 
-
-
+#Review.getReviewsByISBN(9780470135006)

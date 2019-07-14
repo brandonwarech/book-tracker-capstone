@@ -36,12 +36,15 @@ class favorite:
     def getFavorites(self, User):
         print(User.user_id)
         user_id = User.user_id
+        
         try:
             
             sql = "SELECT * FROM FAVORITES WHERE USER_ID = " + str(user_id)
             
             # Calls database with constructed SQL from imported db class
-            favs = db.db.callDbFetch(self,sql)
+            #favs = db.db.callDbFetch(sql)
+            favs_query_obj = db.dbQuery(sql)
+            favs = db.dbQuery.callDbFetch(favs_query_obj)
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
@@ -66,7 +69,7 @@ class favorite:
             self.user_id) + ',' + str(self.isbn) + ');'
 
         # The only line of code that really does things (calls out to add favorite to Database) 
-        results =  db.db.callDbInsert(self, sql)
+        results =  db.dbQuery.callDbInsert(self, sql)
 
         # Log things about
         logging.debug(sql)

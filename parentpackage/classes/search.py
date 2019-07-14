@@ -48,18 +48,6 @@ class Search:
             logging.error(output)
             return output
 
-    '''
-    else:
-        logging.error("Required Parameters not supplied.")
-        output = {
-            "statusCode": 404,
-            "headers": {"Content-Type": "application/json"},
-            "body": {"error": "Please provide search parameter"},
-        }
-        logging.debug(output)
-        return output
-    '''
-
     def open_query_to_summary(self, query):
         summary = []
         search_url_final = self.search_url + "q=" + query

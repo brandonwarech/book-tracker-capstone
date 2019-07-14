@@ -1,0 +1,14 @@
+[
+  "tests/favorites_test.py::test_get_favorites_by_user",
+  "tests/favorites_test.py::test_get_favorites_by_user_api",
+  "tests/idb_test.py::test_db_fetch_reviews_table",
+  "tests/idb_test.py::test_db_fetch_favorites_table",
+  "tests/idb_test.py::test_db_fetch_single_result",
+  "tests/idb_test.py::test_db_fetch_multiple_results",
+  "tests/reviews_test.py::test_get_reviews_by_isbn",
+  "tests/reviews_test.py::test_post_review",
+  "tests/search_test.py::test_book_search_isbn",
+  "tests/search_test.py::test_book_search_author",
+  "tests/search_test.py::test_book_search_no_params",
+  "tests/search_test.py::test_book_search_title"
+]
