@@ -1,5 +1,0 @@
-{
-  "tests/idb_test.py::test_db_fetch": true,
-  "tests/reviews_test.py::test_book_search_isbn": true,
-  "tests/reviews_test.py::test_post_review": true
-}

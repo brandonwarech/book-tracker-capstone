@@ -1,0 +1,7 @@
+Flask==0.12.2
+ibm_db >=3.0.1
+configparser
+jsonify
+requests
+logging
+flask_restplus==0.12.1
