@@ -67,10 +67,8 @@ def token_required(f):
             token = request.headers['X-API-KEY']
         if not token:
             return {'message':'Token is missing'},401
-
         if token != myToken:
             return {'message':'Incorrect token'}, 401
-
         print('TOKEN: {}'.format(token))
         return f(*args, **kwargs)
     return decorated

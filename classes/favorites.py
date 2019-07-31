@@ -7,7 +7,6 @@ import jsonify
 import traceback
 import classes.iDb as db
 import classes.user as u
-#from abc import ABC,abstractclassmethod,abstractmethod
 
 # Set Logging Level
 logging.basicConfig(level=logging.INFO)

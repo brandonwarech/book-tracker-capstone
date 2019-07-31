@@ -8,7 +8,6 @@ import traceback
 import classes.iDb as db
 import classes.user as u
 import classes.Book as b
-#from abc import ABC, abstractclassmethod, abstractmethod
 import traceback
 
 # Set Logging Level
@@ -74,12 +73,7 @@ class Review:
             return {
                 "statusCode": 400,
                 "headers": {"Content-Type": "application/json"},
-                "body": {"error": str(sql) + str(sys.exc_info()) + str(traceback.print_exc()
-)}
-            }
-
-        else:
-            return reviews
+                "body": {"error": str(sql) + str(sys.exc_info()) + str(traceback.print_exc())}}
 
 
     # Class method which adds book to a user's favorites (also to database)
@@ -90,7 +84,7 @@ class Review:
 
         # The only line of code that really does things (calls out to add favorite to Database)
         query_object = db.dbQuery(sql)
-        results = db.dbQuery.callDbInsert(self,query_object)
+        results = db.dbQuery.callDbInsert(self, query_object)
 
         # Log things about
         logging.debug(sql)
@@ -121,9 +115,10 @@ class Review:
 
 
     @staticmethod
-    def deleteReview(user_id,isbn):
+    def deleteReview(user_id, isbn):
         try:
-            sql = "DELETE FROM REVIEWS WHERE USER_ID = " + str(user_id) + " AND ISBN = " + str(isbn)
+            sql = "DELETE FROM REVIEWS WHERE USER_ID = " + \
+                str(user_id) + " AND ISBN = " + str(isbn)
 
             # Calls database with constructed SQL from imported db class
             result = db.dbQuery.callDbFetch(sql)
