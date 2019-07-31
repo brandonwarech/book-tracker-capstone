@@ -37,8 +37,7 @@ class Review:
     @staticmethod
     def getReviewsByUser(user_id):
         try:
-            sql = "SELECT * FROM REVIEWS WHERE USER_ID = " + \
-                str(user_id)
+            sql = "SELECT * FROM REVIEWS WHERE USER_ID = " + str(user_id)
 
             # Calls database with constructed SQL from imported db class
             reviews = db.dbQuery.callDbFetch(sql)
@@ -120,11 +119,24 @@ class Review:
             logging.error(results)
             return results, 500
 
-    def removeFromFavorites(self, params):
-        return params
 
+    @staticmethod
+    def deleteReview(user_id,isbn):
+        try:
+            sql = "DELETE FROM REVIEWS WHERE USER_ID = " + str(user_id) + " AND ISBN = " + str(isbn)
 
-'''    def __str__:
-        return '{} {}'.format(self.user_id, self.isbn)'''
+            # Calls database with constructed SQL from imported db class
+            result = db.dbQuery.callDbFetch(sql)
 
-#Review.getReviewsByISBN(9780470135006)
+            # Log Results of DB call and return results
+            logging.debug("successful connect to db2")
+            logging.info("response: " + str(result))
+            return {"Success"}
+
+        except:
+            logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"error": str(sql) + str(sys.exc_info())}
+            }

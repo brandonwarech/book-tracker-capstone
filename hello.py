@@ -170,6 +170,19 @@ class iReviews(Resource):
         else:
             return('Error: Not all parameters supplied in POST Body json request payload (isbn, title, author)', 400)
 
+    @staticmethod
+    @api.param('isbn','Optional: Specific Book ISBN. Without this parameter, will delete all favorites for user')
+    @api.doc(security='apikey')
+    @token_required
+    def delete(user_id):
+        if flask.request.args.get("isbn") != None:
+            isbn = flask.request.args.get("isbn")
+            result = r.Review.deleteReview(user_id,isbn)
+            return result
+
+        else:
+            return {"Error: ISBN not provided"}
+
 @ns_friends.route('/<string:user_id>')
 class iFriends(Resource):
     @staticmethod
@@ -180,7 +193,7 @@ class iFriends(Resource):
         results = f.Friend.getFriends(user_id)
         print(results)
         return jsonify(results)
-        
+
     @staticmethod
     @api.doc(security='apikey')
     @token_required
