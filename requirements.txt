@@ -5,3 +5,4 @@ jsonify
 requests
 logging
 flask_restplus==0.12.1
+flask_cors ~> 3.0.8

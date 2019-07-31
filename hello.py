@@ -10,8 +10,10 @@ import json
 import classes.user as u
 import classes.Friend as f
 import os
+from flask_cors import CORS
 
 app = Flask(__name__, static_url_path='')
+CORS(app)
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 api = Api(blueprint)
 app.register_blueprint(blueprint)
