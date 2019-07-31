@@ -114,8 +114,8 @@ class favorite:
             return results,500
 
     @staticmethod
-    def removeAllFromFavorites(User):
-        user_id = User.user_id
+    def removeAllFromFavorites(user_id):
+        #user_id = User.user_id
 
         try:
             sql = "DELETE FROM FAVORITES WHERE USER_ID = " + str(user_id)
@@ -142,8 +142,8 @@ class favorite:
             }
 
     @staticmethod
-    def removeBookFromFavorites(User,ISBN):
-        user_id = User.user_id
+    def removeBookFromFavorites(user_id,ISBN):
+        #user_id = User.user_id
 
         try:
             sql = "DELETE FROM FAVORITES WHERE USER_ID = " + str(user_id) + " AND ISBN = " + str(ISBN)
