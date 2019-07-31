@@ -60,12 +60,11 @@ class dbQuery:
             }
 
     #@staticmethod
-    def callDbInsert(self,sql):
+    def callDbInsert(self):
         conn_str = db_creds
-
         try:
             ibm_db_conn = ibm_db.connect(conn_str, "", "")
-            stmt = ibm_db.exec_immediate(ibm_db_conn, str(sql))
+            stmt = ibm_db.exec_immediate(ibm_db_conn, str(self.sql))
             logging.debug("successful connect to db2")
             logging.info('Response57: ' + str(stmt))
             return {

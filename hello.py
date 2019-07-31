@@ -135,7 +135,7 @@ class iFavorites(Resource):
             result = bl.favorite.removeAllFromFavorites(user_id)
             return result
                 
-@ns_reviews.route('/isbn/<string:isbn>')
+@ns_reviews.route('/<string:isbn>')
 class iReviews(Resource):
     @staticmethod
     @api.doc(security='apikey')

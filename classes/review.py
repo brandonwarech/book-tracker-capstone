@@ -65,7 +65,10 @@ class Review:
             logging.debug("successful connect to db2")
             logging.info("SQL: " + str(sql))
             logging.info("Reviews response: " + str(reviews))
-            return reviews
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"reviews": reviews}}
 
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
@@ -79,49 +82,46 @@ class Review:
     # Class method which adds book to a user's favorites (also to database)
     def addReview(self):
 
-        sql = "INSERT INTO KXJ28592.REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES (" + str(
-            self.user_id) + ',' + str(self.rating) + ',\'' + str(self.comment) + '\',\'' + str(self.isbn) + '\');'
+        user_id = self.user_id
+        rating = self.rating
+        comment = self.comment
+        isbn = self.isbn
 
+        sql = "INSERT INTO REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES (\'" + str(user_id) + '\',\'' + str(rating) + '\',\'' + str(comment) + '\',\'' + str(isbn) + '\');'
+
+        logging.info(sql)
         # The only line of code that really does things (calls out to add favorite to Database)
         query_object = db.dbQuery(sql)
-        results = db.dbQuery.callDbInsert(self, query_object)
+        results = db.dbQuery.callDbInsert(query_object)
 
         # Log things about
         logging.debug(sql)
         logging.debug('Result 113: ' + str(results))
 
-        # Error handling based on response from db.callDbInsert function
-        # Follows schema
-        # {
-        #    "statusCode": 400,
-        #    "headers": {"Content-Type": "application/json"},
-        #    "body": ''
-        # }
-
         # Handle successful response
         if results['statusCode'] == 200:
             logging.debug(results)
             logging.info('Successfully added to Favorites' + str(results))
-            return results, 200
+            return results
 
         # Handle unsuccessful resposes
         elif results['statusCode'] == 400:
-            return results, 400
+            return results
 
         else:
             logging.warning('Unexpected Response recieved from DB callout')
             logging.error(results)
-            return results, 500
+            return results
 
 
     @staticmethod
     def deleteReview(user_id, isbn):
         try:
-            sql = "DELETE FROM REVIEWS WHERE USER_ID = " + \
-                str(user_id) + " AND ISBN = " + str(isbn)
+            sql = "DELETE FROM REVIEWS WHERE USER_ID = " + str(user_id) + " AND ISBN = " + str(isbn)
 
             # Calls database with constructed SQL from imported db class
-            result = db.dbQuery.callDbFetch(sql)
+            query_object = db.dbQuery(sql)
+            result = db.dbQuery.callDbFetch(query_object)
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
