@@ -95,11 +95,8 @@ class iFavorites(Resource):
         iUser = u.User(user_id)
         results = bl.favorite.getFavorites(self, iUser)
         print(results)
-        return jsonify({'favorites': results,
-        'headers':{'Content-Type': 'application/json'},
-        'statusCode':200
-        })
-
+        return results
+        
     @api.expect(isbn_model, as_list=True)
     @api.doc(security='apikey')
     @token_required

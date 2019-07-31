@@ -4,7 +4,6 @@ import pytest
 import sys
 import classes.iDb as db
 
-
 def test_db_fetch_reviews_table():
     #sql = "SELECT * FROM REVIEWS WHERE ISBN = 3622859490"
     #sql = "SELECT * FROM FAVORITES WHERE USER_ID = 12345"
@@ -32,12 +31,17 @@ def test_db_fetch_multiple_results():
     results = db.dbQuery.callDbFetch(query_object)
     assert results == [{'USER_ID': '12345', 'ISBN': '1234567890'}, {'USER_ID': '12345', 'ISBN': '1234667890'}, {'USER_ID': '12345', 'ISBN': '1244667890'}]
 
-
 def test_db_insert():
     sql = "INSERT INTO REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES ('54321','5','Test','5119609250');"
     query_object = db.dbQuery(sql)
     results = db.dbQuery.callDbInsert(query_object)
     assert results == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+
+def test_db_insert_failure():
+    sql = "INSERT INTO REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES ();"
+    query_object = db.dbQuery(sql)
+    results = db.dbQuery.callDbInsert(query_object)
+    assert results != { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
 
 
 

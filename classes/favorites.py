@@ -38,7 +38,7 @@ class favorite:
 
         try:
             
-            sql = "SELECT * FROM FAVORITES WHERE USER_ID = " + str(user_id)
+            sql = "SELECT * FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\'"
             
             # Calls database with constructed SQL from imported db class
             #favs = db.db.callDbFetch(sql)
@@ -48,7 +48,11 @@ class favorite:
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
             logging.info("favorites response: " + str(favs))
-            return favs
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": favs}
+            
 
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
@@ -59,24 +63,25 @@ class favorite:
             }
 
     # Class method which adds book to a user's favorites (also to database)
-    def addToFavorites(self, User, Book):
+    @staticmethod
+    def addToFavorites(self, user_id, Book):
 
         self.isbn = Book.isbn
         self.title = Book.title
         self.author = Book.author
         self.publisher = Book.publisher
+        self.publication_date = Book.publication_date
         #self.genre = Book.genre
-        self.user_id = User.user_id
+        #self.user_id = User.user_id
         
-        sql = "INSERT INTO KXJ28592.FAVORITES (USER_ID,ISBN) VALUES (" + str(
-            self.user_id) + ',' + str(self.isbn) + ');'
-        
+        sql = "INSERT INTO KXJ28592.FAVORITES (USER_ID,ISBN) VALUES (" + str(user_id) + ',' + str(self.isbn) + ');'
         sql_book = "INSERT INTO KXJ28592.BOOK (ISBN, TITLE, AUTHOR, PUBLISHER) VALUES (" + str(self.isbn) + ',' + str(self.title) + ',' + str(self.author) + ',' + str(self.publisher) + ');'
 
+        sql_db_object = db.dbQuery(sql)
+        sql_book_db_object = db.dbQuery(sql_book)
         # The only line of code that really does things (calls out to add favorite to Database) 
-        results =  db.dbQuery.callDbInsert(self, sql)
-        results_book = db.dbQuery.callDbInsert(self, sql_book)
-
+        results =  db.dbQuery.callDbInsert(sql_db_object)
+        results_book = db.dbQuery.callDbInsert(sql_book_db_object)
 
         ### Put second SQL for BOOK table here
         ### Put SQL for USER table ?
@@ -101,16 +106,16 @@ class favorite:
             logging.debug(results_book)
             logging.info('Successfully added to Favorites' + str(results))
             logging.info('Successfully added to Books ' + str(results_book))
-            return results, 200
+            return results
             
         # Handle unsuccessful resposes
         elif results['statusCode'] != 400 or results_book['statusCode'] != 200:
-            return results,400
+            return results
 
         else:
             logging.warning('Unexpected Response recieved from DB callout')
             logging.error(results)
-            return results,500
+            return results
 
     @staticmethod
     def removeAllFromFavorites(user_id):
