@@ -126,7 +126,11 @@ class Review:
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
             logging.info("response: " + str(result))
-            return {"Success"}
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": "Success"
+            }
 
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")

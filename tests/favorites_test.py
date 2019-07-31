@@ -15,9 +15,16 @@ def test_get_favorites_by_user():
       #[{'USER_ID': '12345', 'ISBN': '1234667890'}, {'USER_ID': '12345', 'ISBN': '1244667890'}]
       # { "favorites": [ { "ISBN": "1234667890", "USER_ID": "12345" }, { "ISBN": "1244667890", "USER_ID": "12345" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
 
+def test_add_favorite():
+      # self, User, Book --> switch to user_id
+      assert False
 
-def test_get_favorites_by_user_api():
-      #{ "favorites": [ { "ISBN": "1234567890", "USER_ID": "12345" }, { "ISBN": "1234667890", "USER_ID": "12345" }, { "ISBN": "1244667890", "USER_ID": "12345" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
-      pass
+def test_remove_all_favorites():
+      result = f.favorite.removeAllFromFavorites(55555)
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
 
-#test_get_booklist_by_booklistid()
+def test_remove_book_from_favorites():
+      # user_id, ISBN
+      result = f.favorite.removeBookFromFavorites(55555,55555)
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+
