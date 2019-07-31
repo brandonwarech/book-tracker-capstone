@@ -11,20 +11,38 @@ import classes.user as u
 import classes.Friend as f
 import os
 from flask_cors import CORS
+from functools import wraps
 
+# Setup API Key Authentication for Flask RestPlus
+authorizations = {
+    'apikey': {
+        'type':'apiKey',
+        'in': 'header',
+        'name' : 'X-API-KEY'
+    }
+}
+
+# Define Flask App including Blueprint
 app = Flask(__name__, static_url_path='')
-CORS(app)
 blueprint = Blueprint('api', __name__, url_prefix='/api')
-api = Api(blueprint)
+api = Api(blueprint, authorizations=authorizations)
 app.register_blueprint(blueprint)
 app.config["DEBUG"] = True
 app.config["SWAGGER_UI_JSONEDITOR"] = True
+
+# Temporarily set token to authenticate against- Future - remove from code and add to config.ini
+myToken = 'test_token'
+
+# Enable Cors
+CORS(app)
+
+# Define Namespaces for API Families
 ns_search = api.namespace('search', description='Search operations')
 ns_favorites = api.namespace('favorites', description='Favorites operations')
 ns_reviews = api.namespace('reviews', description='Reviews operations')
 ns_friends = api.namespace('friends', description='Friend operations')
 
-
+# Define Object Models for use by API's
 book_fields = {
     "isbn": fields.String,
     "author":fields.String,
@@ -33,9 +51,30 @@ book_fields = {
 isbn_model = api.model('books', {'isbn':fields.Integer('ISBN Number'),'author':fields.String('Author'), 'title':fields.String('Title')})
 review_model = api.model('review', {'user_id':fields.Integer('User ID'), 'rating':fields.Integer('Rating 1-5'), 'comment':fields.String('Free form text comment')})
 
+
+# Define public endpoints with behaviors
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
+
+
+# Implement Authentication
+def token_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        token = None
+        if 'X-API-KEY' in request.headers:
+            token = request.headers['X-API-KEY']
+        if not token:
+            return {'message':'Token is missing'},401
+
+        if token != myToken:
+            return {'message':'Incorrect token'}, 401
+
+        print('TOKEN: {}'.format(token))
+        return f(*args, **kwargs)
+    return decorated
+
 
 @ns_search.route('/<string:query>')
 class iBooks(Resource):
@@ -51,6 +90,8 @@ class iBooks(Resource):
 
 @ns_favorites.route('/<string:user_id>')
 class iFavorites(Resource):
+    @api.doc(security='apikey')
+    @token_required
     def get(self, user_id):
         #return_favorites = []
         iUser = u.User(user_id)
@@ -62,6 +103,8 @@ class iFavorites(Resource):
         })
 
     @api.expect(isbn_model, as_list=True)
+    @api.doc(security='apikey')
+    @token_required
     def post(self, user_id):
         json_data = request.json
         if 'isbn' in json_data and 'title' in json_data and 'author' in json_data:
@@ -81,6 +124,8 @@ class iFavorites(Resource):
 
     @staticmethod
     @api.param('isbn','Optional: Specific Book ISBN. Without this parameter, will delete all favorites for user')
+    @api.doc(security='apikey')
+    @token_required
     def delete(user_id):
 
         if flask.request.args.get("isbn") != None:
@@ -92,17 +137,20 @@ class iFavorites(Resource):
             result = bl.favorite.removeAllFromFavorites(user_id)
             return result
                 
-
-
 @ns_reviews.route('/isbn/<string:isbn>')
 class iReviews(Resource):
     @staticmethod
+    @api.doc(security='apikey')
+    @token_required
     def get(isbn):
         results = r.Review.getReviewsByISBN(isbn)
         print(results)
         return jsonify(results)
 
     @api.expect(review_model, as_list=True)
+    @staticmethod
+    @api.doc(security='apikey')
+    @token_required
     def post(self,isbn):
         json_data = request.json
         if 'comment' in json_data and 'rating' in json_data and 'user_id' in json_data:
@@ -125,11 +173,17 @@ class iReviews(Resource):
 @ns_friends.route('/<string:user_id>')
 class iFriends(Resource):
     @staticmethod
+    @staticmethod
+    @api.doc(security='apikey')
+    @token_required
     def get(user_id):
         results = f.Friend.getFriends(user_id)
         print(results)
         return jsonify(results)
         
+    @staticmethod
+    @api.doc(security='apikey')
+    @token_required
     def post(self):
         return True
 
