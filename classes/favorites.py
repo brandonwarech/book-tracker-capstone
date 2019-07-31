@@ -113,15 +113,61 @@ class favorite:
             logging.error(results)
             return results,500
 
+    @staticmethod
+    def removeAllFromFavorites(User):
+        user_id = User.user_id
 
-    def removeFromFavorites(self,params):
-        return params
+        try:
+            sql = "DELETE FROM FAVORITES WHERE USER_ID = " + str(user_id)
+            
+            # Calls database with constructed SQL from imported db class
+            query_obj = db.dbQuery(sql)
+            result = db.dbQuery.callDbFetch(query_obj)
 
+            # Log Results of DB call and return results
+            logging.debug("successful connect to db2")
+            logging.info("response: " + str(result))
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": "Success"}
+            
 
+        except:
+            logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"error": str(sql) + str(sys.exc_info())}
+            }
 
+    @staticmethod
+    def removeBookFromFavorites(User,ISBN):
+        user_id = User.user_id
 
-'''    def __str__:
-        return '{} {}'.format(self.user_id, self.isbn)'''
+        try:
+            sql = "DELETE FROM FAVORITES WHERE USER_ID = " + str(user_id) + " AND ISBN = " + str(ISBN)
+            
+            # Calls database with constructed SQL from imported db class
+            query_obj = db.dbQuery(sql)
+            result = db.dbQuery.callDbFetch(query_obj)
+
+            # Log Results of DB call and return results
+            logging.debug("successful connect to db2")
+            logging.info("response: " + str(result))
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": "Success"}
+            
+
+        except:
+            logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"error": str(sql) + str(sys.exc_info())}
+            }
 
 
 
