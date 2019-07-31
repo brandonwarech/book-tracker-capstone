@@ -49,7 +49,7 @@ class iBooks(Resource):
         })'''
         return jsonify(results)
 
-@ns_favorites.route('/<int:user_id>')
+@ns_favorites.route('/<string:user_id>')
 class iFavorites(Resource):
     def get(self, user_id):
         #return_favorites = []
