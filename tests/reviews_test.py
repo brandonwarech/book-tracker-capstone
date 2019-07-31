@@ -2,7 +2,7 @@
 
 import pytest
 import sys
-import parentpackage.classes.review as r
+import classes.review as r
 
 def test_get_reviews_by_isbn():
 

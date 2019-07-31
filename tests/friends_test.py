@@ -3,8 +3,8 @@
 import pytest
 import sys
 
-import parentpackage.classes.Friend as f
-import parentpackage.classes.user as u
+import classes.Friend as f
+import classes.user as u
 
 
 

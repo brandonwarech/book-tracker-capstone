@@ -3,7 +3,7 @@
 import pytest
 import sys
 
-import parentpackage.classes.iDb as db
+import classes.iDb as db
 
 
 def test_db_fetch_reviews_table():

@@ -2,7 +2,7 @@
 
 import pytest
 import sys
-import parentpackage.classes.search as bs
+import classes.search as bs
 
 def test_book_search_isbn():
     query = bs.Search({'isbn':'9780470135006'})

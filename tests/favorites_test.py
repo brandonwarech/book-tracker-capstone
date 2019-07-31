@@ -3,8 +3,8 @@
 import pytest
 import sys
 
-import parentpackage.classes.favorites as f
-import parentpackage.classes.user as u
+import classes.favorites as f
+import classes.user as u
 
 
 def test_get_favorites_by_user():
