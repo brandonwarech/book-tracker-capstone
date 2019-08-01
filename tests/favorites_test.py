@@ -27,9 +27,11 @@ def test_add_favorite():
       # self, User, Book --> switch to user_id
       random_num = random.randint(1111111,99999999999)
       book_object = b.Book(random_num,'Test','Test','Test','Test')
+
       favorite_object = f.favorite()
       result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
       assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+
 
 def test_remove_all_favorites():
       result = f.favorite.removeAllFromFavorites(55555)

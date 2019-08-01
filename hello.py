@@ -9,9 +9,11 @@ import flask
 import json
 import classes.user as u
 import classes.Friend as f
+import classes.Book as bk
 import os
 from flask_cors import CORS
 from functools import wraps
+import sys
 
 # Setup API Key Authentication for Flask RestPlus
 authorizations = {
@@ -73,17 +75,13 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-
 @ns_search.route('/<string:query>')
 class iBooks(Resource):
     def get(self, query):
         query = bs.Search({'query':query})
         results = bs.Search.searchByQuery(query)
         print(results)
-        '''return jsonify({'books': results,
-        'headers':{'Content-Type': 'application/json'},
-        'statusCode':200
-        })'''
+
         return jsonify(results)
 
 @ns_favorites.route('/<string:user_id>')
@@ -103,17 +101,21 @@ class iFavorites(Resource):
     def post(self, user_id):
         json_data = request.json
         if 'isbn' in json_data and 'title' in json_data and 'author' in json_data:
-            favorite = favorite()
-            favorite.isbn = json_data['isbn']
+            favorite = bl.favorite()
+            isbn = json_data['isbn']
             title = json_data['title']
             author = json_data['author']
+            book = bk.Book(isbn,title,author,'','')
             try:
-                response = bl.addToFavorites({'isbn':isbn, 'user_id':user_id, 'title':title, 'author':author})
+                #response = bl.addToFavorites(favorite,user_id,book)
+                response = bl.favorite.addToFavorites(favorite,user_id,book)
                 return response
             except:
-                return (response,400)
-            else:
-                return(response, 200)
+                return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"error": 'Unable to add to Favorites ' + str(sys.exc_info())}
+            }
         else:
             return('Error: Not all parameters supplied in POST Body json request payload (isbn, title, author)', 400)
 
