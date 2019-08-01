@@ -1,4 +1,4 @@
-# Getting Started with Python on IBM Cloud
+# Getting Started with Book Tracker Orchestartion App
 
 The following instructions are for deploying the application as a Cloud Foundry application. To deploy as a container to **IBM Cloud Kubernetes Service** instead, [see README-kubernetes.md](README-kubernetes.md)
 
@@ -51,15 +51,6 @@ The manifest.yml includes basic information about our app, such as the name, how
 ## 4. Deploy the app
 
 You can use the IBM Cloud / Cloud Foundry CLI to deploy apps.
-
-Replace the *API-endpoint* in the command with an API endpoint from the following list.
-
-|URL                             |Region          |
-|:-------------------------------|:---------------|
-| https://api.ng.bluemix.net     | US South       |
-| https://api.eu-de.bluemix.net  | Germany        |
-| https://api.eu-gb.bluemix.net  | United Kingdom |
-| https://api.au-syd.bluemix.net | Sydney         |
 
 Login to your IBM Cloud account
 
