@@ -37,11 +37,8 @@ class favorite:
         user_id = User.user_id
 
         try:
-            
             sql = "SELECT * FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\'"
-            
             # Calls database with constructed SQL from imported db class
-            #favs = db.db.callDbFetch(sql)
             favs_query_obj = db.dbQuery(sql)
             favs = db.dbQuery.callDbFetch(favs_query_obj)
 

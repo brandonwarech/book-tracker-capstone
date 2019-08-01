@@ -13,9 +13,6 @@ def test_post_review():
     post_review = r.Review.addReview(review)
     assert post_review == {'body': 'Success', 'headers': {'Content-Type': 'application/json'}, 'statusCode': 200}
 
-def test_get_reviews_by_user():
-    assert False
-
 def test_delete_review():
     result = r.Review.deleteReview(54321,5119609250)
     assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
