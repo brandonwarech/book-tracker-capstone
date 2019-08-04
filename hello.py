@@ -50,7 +50,7 @@ book_fields = {
     "author":fields.String,
     "title":fields.String
 }
-isbn_model = api.model('books', {'isbn':fields.Integer('ISBN Number'),'author':fields.String('Author'), 'title':fields.String('Title')})
+isbn_model = api.model('books', {'isbn':fields.String('ISBN Number'),'author':fields.String('Author'), 'title':fields.String('Title')})
 review_model = api.model('review', {'user_id':fields.Integer('User ID'), 'rating':fields.Integer('Rating 1-5'), 'comment':fields.String('Free form text comment')})
 
 
@@ -95,9 +95,9 @@ class iFavorites(Resource):
         print(results)
         return results
         
-    @api.expect(isbn_model, as_list=True)
     @api.doc(security='apikey')
-    @token_required
+    #@token_required
+    @api.expect(isbn_model, as_list=True)
     def post(self, user_id):
         json_data = request.json
         if 'isbn' in json_data and 'title' in json_data and 'author' in json_data:
@@ -107,7 +107,6 @@ class iFavorites(Resource):
             author = json_data['author']
             book = bk.Book(isbn,title,author,'','')
             try:
-                #response = bl.addToFavorites(favorite,user_id,book)
                 response = bl.favorite.addToFavorites(favorite,user_id,book)
                 return response
             except:
@@ -144,10 +143,10 @@ class iReviews(Resource):
         print(results)
         return jsonify(results)
 
-    @api.expect(review_model, as_list=True)
     @staticmethod
     @api.doc(security='apikey')
     @token_required
+    @api.expect(review_model, as_list=True)
     def post(self,isbn):
         json_data = request.json
         if 'comment' in json_data and 'rating' in json_data and 'user_id' in json_data:

@@ -19,7 +19,6 @@ def test_get_favorites_by_user_string():
       testUserObject = u.User('testuser2@test.com')
       assert f.favorite.getFavorites(favoriteObject,testUserObject) == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": [ { "USER_ID": "testuser2@test.com", "ISBN": "55555555" } ] }
 
-
 def test_add_favorite():
       # self, User, Book --> switch to user_id
       random_num = random.randint(1111111,99999999999)
@@ -28,6 +27,11 @@ def test_add_favorite():
       result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
       assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
 
+def test_add_favorite_isbn_string():
+      book_object = b.Book('Test','Test','Test','Test','Test')
+      favorite_object = f.favorite()
+      result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
 
 def test_remove_all_favorites():
       result = f.favorite.removeAllFromFavorites(55555)
@@ -38,3 +42,5 @@ def test_remove_book_from_favorites():
       result = f.favorite.removeBookFromFavorites(55555,55555)
       assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
 
+def test_favorites_class_init():
+      f.favorite()

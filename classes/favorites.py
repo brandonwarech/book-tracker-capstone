@@ -71,14 +71,13 @@ class favorite:
         #self.genre = Book.genre
         #self.user_id = User.user_id
         
-        sql = "INSERT INTO KXJ28592.FAVORITES (USER_ID,ISBN) VALUES (" + str(user_id) + ',' + str(self.isbn) + ');'
-        sql_book = "INSERT INTO KXJ28592.BOOK (ISBN, TITLE, AUTHOR, PUBLISHER) VALUES (" + str(self.isbn) + ',' + str(self.title) + ',' + str(self.author) + ',' + str(self.publisher) + ');'
+        sql = "INSERT INTO KXJ28592.FAVORITES (USER_ID,ISBN) VALUES (" + str(user_id) + ',\'' + str(self.isbn) + '\');'
 
         sql_db_object = db.dbQuery(sql)
-        sql_book_db_object = db.dbQuery(sql_book)
+        #sql_book_db_object = db.dbQuery(sql_book)
         # The only line of code that really does things (calls out to add favorite to Database) 
         results =  db.dbQuery.callDbInsert(sql_db_object)
-        results_book = db.dbQuery.callDbInsert(sql_book_db_object)
+        #results_book = db.dbQuery.callDbInsert(sql_book_db_object)
 
         ### Put second SQL for BOOK table here
         ### Put SQL for USER table ?
@@ -86,8 +85,8 @@ class favorite:
         # Log things about
         logging.debug(sql)
         logging.debug('Result 113: ' + str(results))
-        logging.debug(sql_book)
-        logging.debug('Result 85: ' + str(results_book))
+        #logging.debug(sql_book)
+        #logging.debug('Result 85: ' + str(results_book))
 
         # Error handling based on response from db.callDbInsert function
         # Follows schema
@@ -98,15 +97,13 @@ class favorite:
         #}
         
         # Handle successful response
-        if results['statusCode'] == 200 and results_book['statusCode'] == 200:
+        if results['statusCode'] == 200:
             logging.debug(results)
-            logging.debug(results_book)
             logging.info('Successfully added to Favorites' + str(results))
-            logging.info('Successfully added to Books ' + str(results_book))
             return results
             
         # Handle unsuccessful resposes
-        elif results['statusCode'] != 400 or results_book['statusCode'] != 200:
+        elif results['statusCode'] != 200:
             return results
 
         else:

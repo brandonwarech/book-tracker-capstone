@@ -17,8 +17,6 @@ class Book:
 
     def add_to_db(self):
         #logging.info('Mimick add to DB')
-        sql = "INSERT INTO BOOK (ISBN,TITLE,AUTHOR,PUBLISHER,GENRE,PUBLICATION_DATE) VALUES ('55555','TEST Title', 'Test Author', 'Test Publisher', 'Test Genre', '1-1-2001')"
+        sql = "INSERT INTO BOOK (ISBN,TITLE,AUTHOR,PUBLISHER,PUBLICATION_DATE) VALUES (self.isbn, self.title, self.author, self.publisher, self.publication_date)"
         query_object = db.dbQuery(sql)
         db.dbQuery.callDbInsert(query_object)
-        return True
-
