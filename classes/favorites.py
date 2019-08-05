@@ -71,7 +71,7 @@ class favorite:
         #self.genre = Book.genre
         #self.user_id = User.user_id
         
-        sql = "INSERT INTO KXJ28592.FAVORITES (USER_ID,ISBN) VALUES (" + str(user_id) + ',\'' + str(self.isbn) + '\');'
+        sql = "INSERT INTO FAVORITES (USER_ID,ISBN) VALUES (\'" + str(user_id) + '\',\'' + str(self.isbn) + '\');'
 
         sql_db_object = db.dbQuery(sql)
         #sql_book_db_object = db.dbQuery(sql_book)
