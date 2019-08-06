@@ -37,7 +37,7 @@ class favorite:
         user_id = User.user_id
 
         try:
-            sql = "SELECT * FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\'"
+            sql = "SELECT * FROM FAVORITES,BOOK WHERE FAVORITES.ISBN = BOOK.ISBN AND USER_ID = \'" + str(user_id) + "\'"
             # Calls database with constructed SQL from imported db class
             favs_query_obj = db.dbQuery(sql)
             favs = db.dbQuery.callDbFetch(favs_query_obj)
@@ -75,26 +75,14 @@ class favorite:
 
         sql_db_object = db.dbQuery(sql)
         #sql_book_db_object = db.dbQuery(sql_book)
+        
         # The only line of code that really does things (calls out to add favorite to Database) 
         results =  db.dbQuery.callDbInsert(sql_db_object)
         #results_book = db.dbQuery.callDbInsert(sql_book_db_object)
 
-        ### Put second SQL for BOOK table here
-        ### Put SQL for USER table ?
-
         # Log things about
         logging.debug(sql)
         logging.debug('Result 113: ' + str(results))
-        #logging.debug(sql_book)
-        #logging.debug('Result 85: ' + str(results_book))
-
-        # Error handling based on response from db.callDbInsert function
-        # Follows schema
-        # {
-        #    "statusCode": 400,
-        #    "headers": {"Content-Type": "application/json"},
-        #    "body": ''
-        #}
         
         # Handle successful response
         if results['statusCode'] == 200:
@@ -128,7 +116,8 @@ class favorite:
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},
-                "body": "Success"}
+                "body": "Success",
+                "details": str(result)}
             
 
         except:
@@ -144,7 +133,7 @@ class favorite:
         #user_id = User.user_id
 
         try:
-            sql = "DELETE FROM FAVORITES WHERE USER_ID = " + str(user_id) + " AND ISBN = " + str(ISBN)
+            sql = "DELETE FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\' AND ISBN = \'" + str(ISBN) + "\'"
             
             # Calls database with constructed SQL from imported db class
             query_obj = db.dbQuery(sql)
@@ -156,7 +145,9 @@ class favorite:
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},
-                "body": "Success"}
+                "body": "Success",
+                "details": str(result)}
+
             
 
         except:

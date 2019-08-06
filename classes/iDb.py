@@ -48,7 +48,6 @@ class dbQuery:
             logging.info("successful connect to db2")
             logging.info('Response57: ' + str(stmt))
             logging.info('Response58: ' + str(response))
-
             return response
 
         except:
@@ -70,7 +69,7 @@ class dbQuery:
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},
-                "body": 'Success'
+                "body": 'Success',
             }
 
         except:

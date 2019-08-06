@@ -15,4 +15,11 @@ def test_book_class_init():
 
 def test_book_class_init_no_value():
     with pytest.raises(Exception) as e_info:
-        obj = bk.Book()
+        obj = bk.Book() 
+
+def test_book_class_init_empty_values():
+        isbn = 'test',
+        title = 'test title 3',
+        author = 'test author 3',
+        book_object = bk.Book(isbn,title,author,'','')
+        assert book_object.publication_date == ''
