@@ -116,7 +116,7 @@ class favorite:
         #user_id = User.user_id
 
         try:
-            sql = "DELETE FROM FAVORITES WHERE USER_ID = " + str(user_id)
+            sql = "DELETE FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\'"
             
             # Calls database with constructed SQL from imported db class
             query_obj = db.dbQuery(sql)
