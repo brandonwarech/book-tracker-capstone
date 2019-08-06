@@ -50,7 +50,7 @@ book_fields = {
     "author":fields.String,
     "title":fields.String
 }
-isbn_model = api.model('books', {'isbn':fields.String('ISBN Number'),'author':fields.String('Author'), 'title':fields.String('Title')})
+isbn_model = api.model('books', {'isbn':fields.String('ISBN Number'),'author':fields.String('Author'), 'title':fields.String('Title'), 'publisher':fields.String('Publisher'),'genre':fields.String('Genre'),'category':fields.String('Category'),'publication_date':fields.String('Publication Date'),})
 review_model = api.model('review', {'user_id':fields.Integer('User ID'), 'rating':fields.Integer('Rating 1-5'), 'comment':fields.String('Free form text comment')})
 
 
@@ -97,7 +97,7 @@ class iFavorites(Resource):
         
     @api.doc(security='apikey')
     #@token_required
-    @api.expect(isbn_model, as_list=True)
+    @api.expect([isbn_model])
     def post(self, user_id):
         json_data = request.json
         if 'isbn' in json_data and 'title' in json_data and 'author' in json_data:
@@ -105,7 +105,9 @@ class iFavorites(Resource):
             isbn = json_data['isbn']
             title = json_data['title']
             author = json_data['author']
-            book = bk.Book(isbn,title,author,'','')
+            publisher = json_data['publisher']
+            publication_date = json_data['publication_date']
+            book = bk.Book(isbn,title,author,publisher,publication_date)
             try:
                 response = bl.favorite.addToFavorites(favorite,user_id,book)
                 return response
