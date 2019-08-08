@@ -33,9 +33,11 @@ class dbQuery:
         response = []
 
         try:
+            # Call DB2
             ibm_db_conn = ibm_db.connect(conn_str, "", "")
             stmt = ibm_db.exec_immediate(ibm_db_conn, sql)
             dictionary = ibm_db.fetch_assoc(stmt)
+
             response.append(dictionary)
             print(dictionary)
 
@@ -48,8 +50,8 @@ class dbQuery:
             logging.info("successful connect to db2")
             logging.info('Response57: ' + str(stmt))
             logging.info('Response58: ' + str(response))
-            return response
 
+            return response
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
             return {
@@ -79,6 +81,6 @@ class dbQuery:
             return {
                 "statusCode": 400,
                 "headers": {"Content-Type": "application/json"},
-                "body": {"error": sys.exc_info()}
+                "body": {"error": str(sys.exc_info())}
             }
 

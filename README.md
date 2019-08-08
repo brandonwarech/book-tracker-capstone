@@ -1,7 +1,7 @@
 # Getting Started with Book Tracker Orchestartion App
 
 ### Live Application: http://book-tracker-orch1-brave-elephant.mybluemix.net/api/
-#### Token: 'test_token'
+####   Token: 'test_token'
 
 The following instructions are for deploying the application as a Cloud Foundry application. To deploy as a container to **IBM Cloud Kubernetes Service** instead, [see README-kubernetes.md](README-kubernetes.md)
 
