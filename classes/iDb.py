@@ -71,7 +71,7 @@ class dbQuery:
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},
-                "body": 'Success',
+                "body": 'Success! ' + str(ibm_db.num_rows(stmt)) + ' rows affected'
             }
 
         except:
@@ -84,3 +84,24 @@ class dbQuery:
                 "body": {"error": str(sys.exc_info())}
             }
 
+
+    def callDbDelete(self):
+        conn_str = db_creds
+        try:
+            ibm_db_conn = ibm_db.connect(conn_str, "","")
+            stmt = ibm_db.exec_immediate(ibm_db_conn,str(self.sql))
+            return {
+                "statusCode": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": "Success! " + str(ibm_db.num_rows(stmt)) + ' rows affected'
+            }
+            
+        except:
+            logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
+            # traceback.print_exception()
+
+            return {
+                "statusCode": 400,
+                "headers": {"Content-Type": "application/json"},
+                "body": {"error": str(sys.exc_info())}
+            }

@@ -11,7 +11,7 @@ def test_get_reviews_by_isbn():
 def test_post_review():
     review = r.Review(54321,5119609250,5,'Test')
     post_review = r.Review.addReview(review)
-    assert post_review == {'body': 'Success', 'headers': {'Content-Type': 'application/json'}, 'statusCode': 200}
+    assert post_review == {'body': 'Success! 1 rows affected', 'headers': {'Content-Type': 'application/json'}, 'statusCode': 200}
 
 def test_delete_review():
     result = r.Review.deleteReview(54321,5119609250)

@@ -8,39 +8,57 @@ import classes.favorites as f
 import classes.user as u
 import classes.Book as b
 
+# Create Unique Identifier for ID's for Test (primarily for "delete" tests)
+random_num = random.randint(1111111,99999999999)
 
 def test_get_favorites_by_user_int():
-      favoriteObject = f.favorite()
-      testUserObject = u.User('12245')
-      assert f.favorite.getFavorites(favoriteObject,testUserObject) == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": [ { "USER_ID": "12245", "ISBN": "1244667890" }, { "USER_ID": "12245", "ISBN": "1244669860" }, { "USER_ID": "12245", "ISBN": "1244669890" } ] }
+      user_id = 999999999
+      assert f.favorite.getFavorites(user_id) == { "body": [ { "AUTHOR": "string", "CATEGORY": None, "GENRE": None, "ISBN": "get_favorites_test_isbn_int", "PUBLICATION_DATE": "string", "PUBLISHER": "string", "TITLE": "favorites INT test", "USER_ID": "999999999" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
       
 def test_get_favorites_by_user_string():
-      favoriteObject = f.favorite()
-      testUserObject = u.User('testuser2@test.com')
-      assert f.favorite.getFavorites(favoriteObject,testUserObject) == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": [ { "USER_ID": "testuser2@test.com", "ISBN": "55555555" } ] }
+      user_id = "get_favorites_test_userid"
+      assert f.favorite.getFavorites(user_id) == { "body": [ { "AUTHOR": "string", "CATEGORY": None, "GENRE": None, "ISBN": "get_favorites_test_isbn", "PUBLICATION_DATE": "string", "PUBLISHER": "string", "TITLE": "string", "USER_ID": "get_favorites_test_userid" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
 
 def test_add_favorite():
-      # self, User, Book --> switch to user_id
-      random_num = random.randint(1111111,99999999999)
       book_object = b.Book(random_num,'Test','Test','Test','Test')
       favorite_object = f.favorite()
       result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
-      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success! 1 rows affected" }
 
-def test_add_favorite_isbn_string():
-      book_object = b.Book('Test','Test','Test','Test','Test')
+def test_add_favorite_duplicate():
+      book_object = b.Book(random_num, 'Test','Test','Test','Test')
       favorite_object = f.favorite()
       result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
-      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+      assert "One or more values in the INSERT statement, UPDATE statement, or foreign key update caused by a DELETE statement are not valid because the primary key, unique constraint or unique index identified" in str(result)   
 
-def test_remove_all_favorites():
-      result = f.favorite.removeAllFromFavorites(55555)
-      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+def test_add_favorite_isbn_string():
+      book_object = b.Book('Test ' + str(random_num),'Test','Test','Test','Test')
+      favorite_object = f.favorite()
+      result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success! 1 rows affected" }
 
 def test_remove_book_from_favorites():
-      # user_id, ISBN
-      result = f.favorite.removeBookFromFavorites(55555,55555)
-      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+
+      # First add book
+      book_object = b.Book(random_num,'Test','Test','Test','Test')
+      favorite_object = f.favorite()
+      result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
+
+      # Then Delete It
+      result = f.favorite.removeBookFromFavorites(6666666666,random_num)
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success! 1 rows affected" }
+
+def test_remove_all_favorites():
+
+      # First add book
+      book_object = b.Book(random_num,'Test','Test','Test','Test')
+      favorite_object = f.favorite()
+      result = f.favorite.addToFavorites(favorite_object,6666666666,book_object)
+
+      # Then Delete It
+      result = f.favorite.removeAllFromFavorites(6666666666)
+      assert result == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success! 2 rows affected" }
+
 
 def test_favorites_class_init():
       f.favorite()

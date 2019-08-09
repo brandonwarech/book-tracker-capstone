@@ -32,7 +32,7 @@ def test_db_insert():
     sql = "INSERT INTO REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES ('54321','5','Test','5119609250');"
     query_object = db.dbQuery(sql)
     results = db.dbQuery.callDbInsert(query_object)
-    assert results == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success" }
+    assert results == { "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "Success! 1 rows affected" }
 
 def test_db_insert_failure():
     sql = "INSERT INTO REVIEWS (USER_ID,RATING,COMMENT,ISBN) VALUES ();"

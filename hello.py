@@ -92,7 +92,7 @@ class iBooks(Resource):
 class iFavorites(Resource):
 
     @api.doc(security='apikey')
-    #@token_required
+    @token_required
     def get(self, user_id):
         try:
             results = bl.favorite.getFavorites(user_id)
@@ -109,7 +109,7 @@ class iFavorites(Resource):
 
 
     @api.doc(security='apikey')
-    #@token_required
+    @token_required
     @api.expect(isbn_model)
     def post(self, user_id):
 
@@ -138,7 +138,7 @@ class iFavorites(Resource):
     @staticmethod
     @api.param('isbn', 'Optional: Specific Book ISBN. Without this parameter, will delete all favorites for user')
     @api.doc(security='apikey')
-    #@token_required
+    @token_required
     def delete(user_id):
 
         # Checks if ISBN in URL Path query parameters, if so - removes only that ISBN
@@ -195,7 +195,6 @@ class iReviews(Resource):
             review_obj = r.Review(user_id, isbn, rating, comment)
 
             try:
-                #response = r.Review.addReview({'isbn':isbn, 'user_id':user_id, 'comment':comment, 'rating':rating})
                 response = r.Review.addReview(review_obj)
                 return response
             except:
@@ -221,7 +220,6 @@ class iReviews(Resource):
 
 @ns_friends.route('/<string:user_id>')
 class iFriends(Resource):
-    @staticmethod
     @staticmethod
     @api.doc(security='apikey')
     @token_required

@@ -67,7 +67,7 @@ class favorite:
         # Add to Database        
         sql = "INSERT INTO FAVORITES (USER_ID,ISBN) VALUES (\'" + str(user_id) + '\',\'' + str(self.isbn) + '\');'
         sql_db_object = db.dbQuery(sql)
-        results =  db.dbQuery.callDbInsert(sql_db_object)
+        results =  db.dbQuery.callDbDelete(sql_db_object)
 
         # Log things about
         logging.debug(sql)
@@ -106,17 +106,12 @@ class favorite:
             
             # Calls database with constructed SQL from imported db class
             query_obj = db.dbQuery(sql)
-            result = db.dbQuery.callDbFetch(query_obj)
+            result = db.dbQuery.callDbDelete(query_obj)
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
             logging.info("response: " + str(result))
-            return {
-                "statusCode": 200,
-                "headers": {"Content-Type": "application/json"},
-                "body": "Success",
-                "details": str(result)}
-            
+            return result
 
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
@@ -133,16 +128,12 @@ class favorite:
             
             # Calls database with constructed SQL from imported db class
             query_obj = db.dbQuery(sql)
-            result = db.dbQuery.callDbFetch(query_obj)
+            result = db.dbQuery.callDbDelete(query_obj)
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
             logging.info("response: " + str(result))
-            return {
-                "statusCode": 200,
-                "headers": {"Content-Type": "application/json"},
-                "body": "Success",
-                "details": str(result)}
+            return result
 
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
