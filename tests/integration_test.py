@@ -3,9 +3,12 @@
 import pytest
 import sys
 import requests
+import json
+import random
 
 headers = {'X-API-KEY':'test_token'}
 invalid_headers = {'X-API-KEY':'wrong_token'}
+random_num = random.randint(1111111,999999999)
 
 #########################################################
 #                     Cloud Tests                       #
@@ -33,8 +36,23 @@ def test_api_cloud_get_favorites_noresult():
 
 def test_api_cloud_get_favorites_result():
     req_url = "http://book-tracker-orch1-brave-elephant.mybluemix.net/api/favorites/testforJin%40test.com"
-    r = requests.get(url = req_url, headers=headers) 
+    r = requests.get(url = req_url, headers=headers ) 
     assert r.json() == { "body": [ { "AUTHOR": "Test", "CATEGORY": None, "GENRE": None, "ISBN": "Jin123", "PUBLICATION_DATE": "string", "PUBLISHER": "string", "TITLE": "Jinny", "USER_ID": "testforJin@test.com" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
+
+def test_api_cloud_post_favorites_valid():
+    req_url = "http://book-tracker-orch1-brave-elephant.mybluemix.net/api/favorites/integrationtest"
+    random_num = random.randint(1111111,999999999)
+    data = json.dumps({ "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" })
+    r = requests.post(url = req_url, headers=headers,data=data) 
+    assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }
+
+def test_api_cloud_post_favorites_invalid():
+    req_url = "http://book-tracker-orch1-brave-elephant.mybluemix.net/api/favorites/integrationtest"
+    random_num = random.randint(1111111,999999999)
+    data = json.dumps({ "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" })
+    r = requests.post(url = req_url, headers=headers, data=data) 
+    assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }
+
 
 
 #########################################################
@@ -58,7 +76,7 @@ def test_api_local_with_incorrect_token():
 
 def test_api_local_get_favorites_noresult():
     req_url = "http://127.0.0.1:5000/api/favorites/FDSFDSFS"
-    r = requests.get(url = req_url, headers=headers) 
+    r = requests.get(url = req_url, headers=headers)    
     assert r.json() == { "body": [ False ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
 
 def test_api_local_get_favorites_result():
@@ -66,3 +84,17 @@ def test_api_local_get_favorites_result():
     r = requests.get(url = req_url, headers=headers) 
     assert r.json() == { "body": [ { "AUTHOR": "Test", "CATEGORY": None, "GENRE": None, "ISBN": "Jin123", "PUBLICATION_DATE": "string", "PUBLISHER": "string", "TITLE": "Jinny", "USER_ID": "testforJin@test.com" } ], "headers": { "Content-Type": "application/json" }, "statusCode": 200 }
 
+def test_api_local_post_favorites_valid():
+    req_url = "http://127.0.0.1:5000/api/favorites/integrationtest"
+    random_num = random.randint(1111111,999999999)
+    data = { "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" }
+    r = requests.post(url = req_url, headers=headers, json=data)
+    assert r.status_code == 200
+    assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }
+
+def test_api_local_post_favorites_invalid():
+    req_url = "http://127.0.0.1:5000/api/favorites/integrationtest"
+    random_num = random.randint(1111111,999999999)
+    data = json.dumps({ "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" })
+    r = requests.post(url = req_url, headers=headers, json=data) 
+    assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }
