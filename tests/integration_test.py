@@ -42,17 +42,18 @@ def test_api_cloud_get_favorites_result():
 def test_api_cloud_post_favorites_valid():
     req_url = "http://book-tracker-orch1-brave-elephant.mybluemix.net/api/favorites/integrationtest"
     random_num = random.randint(1111111,999999999)
-    data = json.dumps({ "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" })
-    r = requests.post(url = req_url, headers=headers,data=data) 
+    data = { "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" }
+    r = requests.post(url = req_url, headers=headers, json=data) 
     assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }
 
 def test_api_cloud_post_favorites_invalid():
     req_url = "http://book-tracker-orch1-brave-elephant.mybluemix.net/api/favorites/integrationtest"
-    random_num = random.randint(1111111,999999999)
-    data = json.dumps({ "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" })
-    r = requests.post(url = req_url, headers=headers, data=data) 
-    assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }
+    data = { "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" }
+    r = requests.post(url = req_url, headers=headers, json=data) 
+    assert r.json() == 'Error: Not all parameters supplied in POST Body json request payload (isbn, title, author)'
 
+def test_api_cloud_delete_favorites():
+    assert False
 
 
 #########################################################
@@ -95,6 +96,6 @@ def test_api_local_post_favorites_valid():
 def test_api_local_post_favorites_invalid():
     req_url = "http://127.0.0.1:5000/api/favorites/integrationtest"
     random_num = random.randint(1111111,999999999)
-    data = json.dumps({ "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" })
+    data = { "isbn": random_num, "author": "intg test", "title": "intg test", "publisher": "intg test", "publication_date": "intg test" }
     r = requests.post(url = req_url, headers=headers, json=data) 
     assert r.json() == { "statusCode": 200, "headers": { "Content-Type": "application/json" }, "body": "Success! 1 rows affected" }

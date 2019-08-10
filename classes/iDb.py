@@ -10,26 +10,18 @@ import os.path
 # Set Logging Level
 logging.basicConfig(level=logging.DEBUG)
 
-# Load configuration File Elements Needed
-try:
-    '''config = configparser.ConfigParser()
-    config.read('./parentpackage/config.ini')
-    db_creds = config["DATABASE"]["DB_CONN_STRING"]'''
-    db_creds = 'DATABASE=BLUDB;HOSTNAME=dashdb-txn-sbox-yp-dal09-03.services.dal.bluemix.net;PORT=50001;PROTOCOL=TCPIP;UID=kxj28592;PWD=7d^3h26x21fr717n;Security=SSL;'
-
-except:
-    print("Config.ini file not found or not accessible")
-
+# Set DB Credentials -- FUTURE: Move to configuration file
+db_creds = 'DATABASE=BLUDB;HOSTNAME=dashdb-txn-sbox-yp-dal09-03.services.dal.bluemix.net;PORT=50001;PROTOCOL=TCPIP;UID=kxj28592;PWD=7d^3h26x21fr717n;Security=SSL;'
 
 class dbQuery:
 
-    def __init__(self, sql):
+    def __init__(self,sql):
         self.sql = sql
         logging.debug('Created DB query object for ' + str(sql))
     
-    def callDbFetch(self):
+    @staticmethod
+    def callDbFetch(sql):
         conn_str = db_creds
-        sql = self.sql
         response = []
 
         try:
@@ -52,6 +44,8 @@ class dbQuery:
             logging.info('Response58: ' + str(response))
 
             return response
+
+
         except:
             logging.error("Oops!" + str(sys.exc_info()) + "occured. ")
             return {
@@ -60,12 +54,12 @@ class dbQuery:
                 "body": {"Error": sys.exc_info()}
             }
 
-    #@staticmethod
-    def callDbInsert(self):
+    @staticmethod
+    def callDbInsert(sql):
         conn_str = db_creds
         try:
             ibm_db_conn = ibm_db.connect(conn_str, "", "")
-            stmt = ibm_db.exec_immediate(ibm_db_conn, str(self.sql))
+            stmt = ibm_db.exec_immediate(ibm_db_conn, str(sql))
             logging.debug("successful connect to db2")
             logging.info('Response57: ' + str(stmt))
             return {
@@ -84,12 +78,12 @@ class dbQuery:
                 "body": {"error": str(sys.exc_info())}
             }
 
-
-    def callDbDelete(self):
+    @staticmethod
+    def callDbDelete(sql):
         conn_str = db_creds
         try:
             ibm_db_conn = ibm_db.connect(conn_str, "","")
-            stmt = ibm_db.exec_immediate(ibm_db_conn,str(self.sql))
+            stmt = ibm_db.exec_immediate(ibm_db_conn,str(sql))
             return {
                 "statusCode": 200,
                 "headers": {"Content-Type": "application/json"},

@@ -31,11 +31,8 @@ class favorite:
     @staticmethod
     def getFavorites(user_id):
         try:
-            sql = "SELECT DISTINCT * FROM FAVORITES,BOOK WHERE FAVORITES.ISBN = BOOK.ISBN AND USER_ID = \'" + str(user_id) + "\'"
-
-            # Calls database with constructed SQL from imported db class
-            favs_query_obj = db.dbQuery(sql)
-            favs = db.dbQuery.callDbFetch(favs_query_obj)
+            # Calls database 
+            favs = db.dbQuery.callDbFetch("SELECT DISTINCT * FROM FAVORITES,BOOK WHERE FAVORITES.ISBN = BOOK.ISBN AND USER_ID = \'" + str(user_id) + "\'")
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db")
@@ -51,11 +48,11 @@ class favorite:
             return {
                 "statusCode": 400,
                 "headers": {"Content-Type": "application/json"},
-                "body": {"error": "\'" + str(sql) + "\'"}
+                "body": {"error": "\'" + str(sys.exc_info()) + "\'"}
             }
 
     # Class method which adds book to a user's favorites (also to database)
-    @staticmethod
+    #@staticmethod
     def addToFavorites(self, user_id, Book):
 
         self.isbn = Book.isbn
@@ -65,48 +62,22 @@ class favorite:
         self.publication_date = Book.publication_date
         
         # Add to Database        
-        sql = "INSERT INTO FAVORITES (USER_ID,ISBN) VALUES (\'" + str(user_id) + '\',\'' + str(self.isbn) + '\');'
-        sql_db_object = db.dbQuery(sql)
-        results =  db.dbQuery.callDbDelete(sql_db_object)
+        results =  db.dbQuery.callDbDelete("INSERT INTO FAVORITES (USER_ID,ISBN) VALUES (\'" + str(user_id) + '\',\'' + str(self.isbn) + '\');')
 
         # Log things about
-        logging.debug(sql)
+        logging.debug(sys.exc_info())
         logging.debug('Result 113: ' + str(results))
 
         # Return
         return results
 
-    '''
-        try:
-
-            # Handle successful response
-            if results['statusCode'] == 200:
-                logging.debug(results)
-                logging.info('Successfully added to Favorites' + str(results))
-                return results
-                
-            # Handle unsuccessful resposes
-            elif results['statusCode'] != 200:
-                return results
-
-            else:
-                logging.warning('Unexpected Response recieved from DB callout')
-                logging.error(results)
-                return results
-
-
-    '''
-
     @staticmethod
     def removeAllFromFavorites(user_id):
         #user_id = User.user_id
 
-        try:
-            sql = "DELETE FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\'"
-            
-            # Calls database with constructed SQL from imported db class
-            query_obj = db.dbQuery(sql)
-            result = db.dbQuery.callDbDelete(query_obj)
+        try:            
+            # Calls database 
+            result = db.dbQuery.callDbDelete("DELETE FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\'")
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
@@ -118,7 +89,7 @@ class favorite:
             return {
                 "statusCode": 400,
                 "headers": {"Content-Type": "application/json"},
-                "body": {"error": str(sql) + str(sys.exc_info())}
+                "body": {"error": str(sys.exc_info())}
             }
 
     @staticmethod
@@ -126,9 +97,8 @@ class favorite:
         try:
             sql = "DELETE FROM FAVORITES WHERE USER_ID = \'" + str(user_id) + "\' AND ISBN = \'" + str(ISBN) + "\'"
             
-            # Calls database with constructed SQL from imported db class
-            query_obj = db.dbQuery(sql)
-            result = db.dbQuery.callDbDelete(query_obj)
+            # Calls database with constructed SQL from imported db class)
+            result = db.dbQuery.callDbDelete(sql)
 
             # Log Results of DB call and return results
             logging.debug("successful connect to db2")
